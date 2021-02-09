@@ -5,18 +5,26 @@ from flask import (
     jsonify,
     request,
     redirect,
-    url_for
+    url_for,
+    send_file
 )
 
-from model import db, save_db
+from model import save_db, load_db
 
+db = load_db()
 app = Flask(
     __name__
 )  # Creates a global Flask application object with the name of the current module (flashcards)
 
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def welcome():
+    if request.method == "POST":
+        f = request.files["file"]
+        f.save("flashcards_db.json")
+        global db
+        db = load_db()
+
     return render_template("welcome.html", cards=db)
 
 
@@ -78,3 +86,9 @@ def api_card_detail(index):
         return db[index]
     except IndexError:
         abort(404)
+
+
+@app.route("/download")
+def download_file():
+    save_db()
+    return send_file('flashcards_db.json', as_attachment=True)

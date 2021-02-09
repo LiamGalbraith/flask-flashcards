@@ -23,4 +23,14 @@
     <button>
         <a href="{{ url_for('add_card') }}">Add New Card</a>
     </button>
+    <form method="post" enctype="multipart/form-data">
+        Load flashcards from file:
+        <input type="file" name="file">
+        <button type="submit">
+            Upload
+        </button>
+    </form>
+    <button>
+        <a href="{{ url_for('download_file') }}">Downloads cards file.</a>
+    </button>
 {% endblock %}
